@@ -36,6 +36,7 @@ namespace MYSTL {
 		//配置一大块空间，容纳nobjs * size 大小空间
 		//如果不能分配nobjs个空间，nobjs可能降低
 		static char *chunk_alloc(size_t size, int &nobjs);
+		//out of memory 处理函数   并未设置内存不足处理函数set_new_handle
 
 	private:
 		static char *start_free;	//内存池起始位置

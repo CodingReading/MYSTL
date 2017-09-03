@@ -3,7 +3,7 @@
 * 实现内存池，空间分配
 */
 
-#include "alloc.h"
+#include "../alloc.h"
 
 namespace MYSTL {
 	char *alloc::start_free = 0;
@@ -81,7 +81,63 @@ namespace MYSTL {
 	}
 
 	//实现内存池
-	char *alloc::chunk_alloc(size_t size, int &nobjs) {
+	char *alloc::chunk_alloc(size_t size, int& nobjs) {
+		char *result = 0;
+		size_t total_bytes = size * nobjs;
+		size_t bytes_left = end_free - start_free;
 
+		if (bytes_left > total_bytes) {
+			//内存池剩余空间满足需求
+			result = start_free;
+			start_free += total_bytes;
+			return result;
+		}
+		else if (bytes_left > size) {
+			//内存池剩余空间不能满足需求量，但够一个以上区块
+			nobjs = bytes_left / size;
+			total_bytes = size * nobjs;
+			result = start_free;
+			start_free += total_bytes;
+			return result;
+		}
+		else{
+			//内存池空间一个区块也不够
+			//理想分配的空间大小为 2 * total_bytes + n
+			size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
+
+			//让内存池中的残余空间还有利用价值,将残余空间编入free_list
+			if (bytes_left > 0) {
+				size_t index = FREELIST_INDEX(bytes_left);
+				((obj*)start_free)->next = free_list[index];
+				free_list[index] = (obj*)start_free;
+			}
+
+			//向系统申请空间配置内存池
+			start_free = (char*)malloc(bytes_to_get);
+			if (start_free == 0) {
+				//申请空间失败
+				//如果free_list中有尚未利用的区块，且区块够大
+				size_t index = 0;
+				obj *p = NULL;
+				for (size_t i = size; i <= MAX_BYTES; i += ALIGN) {
+					index = FREELIST_INDEX(i);
+					p = free_list[index];
+					if (!p) {
+						free_list[index] = p->next;
+						start_free = (char*)p;
+						end_free = start_free + i;
+						//递归调用自己，修正nobjs
+						return chunk_alloc(size, nobjs);
+					}
+				}
+				//向系统申请空间失败，且free list中也没有未使用的比size大的区块
+				end_free == 0;
+			}
+
+			heap_size += bytes_to_get;
+			end_free = start_free + bytes_to_get;
+			//递归调用自己，修正 nobjs
+			return chunk_alloc(size, nobjs);
+		}
 	}
 }
