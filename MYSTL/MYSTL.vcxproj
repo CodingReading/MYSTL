@@ -145,7 +145,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="alloc.cpp" />
+    <ClCompile Include="Detail\alloc.cpp" />
     <ClCompile Include="MYSTL.cpp" />
   </ItemGroup>
   <ItemGroup>

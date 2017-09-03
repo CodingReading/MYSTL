@@ -24,7 +24,7 @@
     <ClCompile Include="MYSTL.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="alloc.cpp">
+    <ClCompile Include="Detail\alloc.cpp">
       <Filter>Detail</Filter>
     </ClCompile>
   </ItemGroup>
