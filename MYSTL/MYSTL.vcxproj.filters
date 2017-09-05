@@ -35,5 +35,8 @@
     <ClInclude Include="typetraits.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
