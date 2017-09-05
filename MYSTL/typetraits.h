@@ -17,7 +17,7 @@ namespace mySTL {
 
 	template <class type>
 	struct __type_traits {
-		typedef __true_type this_dummu_member_must_be_first;
+		typedef __true_type this_dummy_member_must_be_first;
 
 		//做保守估计，默认型别都没有
 		typedef __false_type has_trivial_default_constuctor;
