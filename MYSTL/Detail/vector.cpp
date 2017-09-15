@@ -1,4 +1,4 @@
-#include "vector.h"
+#include "../vector.h"
 
 namespace mySTL {
 	//构造函数使用
