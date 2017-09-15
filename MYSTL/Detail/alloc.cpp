@@ -5,7 +5,7 @@
 
 #include "../alloc.h"
 
-namespace MYSTL {
+namespace mySTL {
 	char *alloc::start_free = 0;
 	char *alloc::end_free = 0;
 	size_t alloc::heap_size = 0;

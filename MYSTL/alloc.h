@@ -3,7 +3,7 @@
 
 #include <cstdlib>
 
-namespace MYSTL {
+namespace mySTL {
 	class alloc {
 	private:
 		enum { ALIGN = 8 };			//×îÐ¡Çø¿é
