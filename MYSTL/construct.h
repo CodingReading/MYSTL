@@ -1,5 +1,5 @@
-#ifndef CONSTRUCT_
-#define CONSTRUCT_
+#ifndef CONSTRUCT_H_
+#define CONSTRUCT_H_
 
 #include <new>
 
@@ -39,8 +39,11 @@ namespace mySTL {
 
 	//针对基本类型特化
 	inline void destroy(char *, char *) {};
+
 	inline void destroy(int *, int *) {};
+
 	inline void destroy(long *, long *) {};
+	inline void destroy(long long *, long long *) {};
 	inline void destroy(float *, float *) {};
 	inline void destroy(double *, double *) {};
 }

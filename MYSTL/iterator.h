@@ -1,5 +1,5 @@
-#ifndef ITERATOR_
-#define ITERATOR_
+#ifndef ITERATOR_H_
+#define ITERATOR_H_
 
 namespace mySTL {
 	struct input_iterator_tag {};			//所指对象只读
