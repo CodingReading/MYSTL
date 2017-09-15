@@ -1,4 +1,4 @@
-#include "list.h"
+#include "../list.h"
 using namespace std;
 
 namespace mySTL {
