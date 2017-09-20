@@ -131,7 +131,7 @@ namespace mySTL {
 					}
 				}
 				//向系统申请空间失败，且free list中也没有未使用的比size大的区块
-				end_free == 0;
+				end_free = 0;
 			}
 
 			heap_size += bytes_to_get;
