@@ -189,6 +189,16 @@ namespace mySTL {
 		typedef __true_type has_trivial_destructor;
 		typedef __true_type is_POD_type;
 	};
+
+	template<class T>
+	struct __type_traits<const T*>
+	{
+		typedef __true_type		has_trivial_default_constructor;
+		typedef __true_type		has_trivial_copy_constructor;
+		typedef __true_type		has_trivial_assignment_operator;
+		typedef __true_type		has_trivial_destructor;
+		typedef __true_type		is_POD_type;
+	};
 }
 
 #endif
