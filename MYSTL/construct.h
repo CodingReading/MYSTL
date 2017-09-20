@@ -1,10 +1,11 @@
 #ifndef CONSTRUCT_H_
 #define CONSTRUCT_H_
 
+#include "typetraits.h"
 #include <new>
 
 namespace mySTL {
-	template <class T1, const T2&>
+	template <class T1, class T2 >
 	inline void construct(T1 *p, const T2& value) {
 		//placement new 将初值设定到p所指空间
 		new (p) T1(value);	//调用T1::T1(value)
@@ -28,14 +29,14 @@ namespace mySTL {
 
 	//如果元素类型没有 trivial destructor
 	template <class ForwardIterator>
-	inline void __destory_aux(ForwardIterator first, ForwardIterator last, __flase_type) {
+	inline void __destory_aux(ForwardIterator first, ForwardIterator last, __false_type) {
 		for (; first < last; ++first)
 			destroy(&*first);
 	}
 
 	//有trivial destructor  什么也不做
 	template <class ForwardIterator>
-	inline void __destroy_aux(ForwaedIterator first, ForwardIterator last, __true_type) {}
+	inline void __destroy_aux(ForwardIterator first, ForwardIterator last, __true_type) {}
 
 	//针对基本类型特化
 	inline void destroy(char *, char *) {};

@@ -11,7 +11,7 @@
 #include "alloc.h"
 
 namespace mySTL {
-	template <class T, class Alloc>
+	template < class T, class Alloc = alloc >
 	class allocator {
 	public :
 		static T *allocate(size_t n) {
