@@ -13,33 +13,51 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Detail">
-      <UniqueIdentifier>{bf11deaf-a0f1-40a0-a340-85b4dcfb0d85}</UniqueIdentifier>
+    <Filter Include="UnitTest">
+      <UniqueIdentifier>{61e6bb9a-7dbb-4b15-b0a3-9d4b2cf40bf5}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="MYSTL.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Detail\alloc.cpp">
-      <Filter>Detail</Filter>
-    </ClCompile>
+    <Filter Include="Detail">
+      <UniqueIdentifier>{5f17d980-f802-42cf-9336-93fb73b2c58e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="alloc.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="typetraits.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="iterator.h">
+    <ClInclude Include="allocator.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="construct.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="iterator.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="typetraits.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="uninitialized.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTest\test.h">
+      <Filter>UnitTest</Filter>
+    </ClInclude>
+    <ClInclude Include="algorithm.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTest\typetraits_test.h">
+      <Filter>UnitTest</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Detail\alloc.cpp">
+      <Filter>Detail</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTest\typetraits_test.cpp">
+      <Filter>UnitTest</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
