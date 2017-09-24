@@ -1,7 +1,9 @@
-//#include "VectorTest.h"
-#include "UnitTest/typetraits_test.h"
+#include "UnitTest\typetraits_test.h"
+#include "UnitTest\vector_test.h"
 
 int main() {
-	//mySTL::vector_test::test_vec();
+	mySTL::typetraits_test::test_all();
+	mySTL::vector_test::test_all();
 
+	return 0;
 }
