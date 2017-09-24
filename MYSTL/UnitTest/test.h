@@ -8,7 +8,7 @@
 namespace mySTL {
 	namespace test {
 		template <class Container1, class Container2>
-		bool container_equal(Container1 c1, Container2 c2) {
+		bool container_equal(Container1& c1, Container2& c2) {
 			auto first1 = c1.begin();
 			auto last1 = c1.end();
 			auto first2 = c2.begin();
@@ -22,7 +22,7 @@ namespace mySTL {
 		}
 
 		template <class Container>
-		void container_print(Container c) {
+		void container_print(Container& c) {
 			for (auto t : c)
 				std::cout << t << " ";
 			std::cout << std::endl;
