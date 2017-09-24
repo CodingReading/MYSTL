@@ -3,8 +3,6 @@
 				对空间配置器alloc的封装
 */
 
-
-
 #ifndef ALLOCATOR_H_
 #define ALLOCATOR_H_
 
