@@ -48,6 +48,15 @@
     <ClInclude Include="UnitTest\typetraits_test.h">
       <Filter>UnitTest</Filter>
     </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\vector.impl.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTest\vector_test.h">
+      <Filter>UnitTest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Detail\alloc.cpp">
@@ -58,6 +67,9 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTest\vector_test.cpp">
+      <Filter>UnitTest</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
