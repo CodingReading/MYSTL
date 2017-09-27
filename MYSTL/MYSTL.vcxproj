@@ -150,10 +150,13 @@
     <ClInclude Include="alloc.h" />
     <ClInclude Include="allocator.h" />
     <ClInclude Include="construct.h" />
+    <ClInclude Include="Detail\list.impl.h" />
     <ClInclude Include="Detail\vector.impl.h" />
     <ClInclude Include="iterator.h" />
+    <ClInclude Include="list.h" />
     <ClInclude Include="typetraits.h" />
     <ClInclude Include="uninitialized.h" />
+    <ClInclude Include="UnitTest\list_test.h" />
     <ClInclude Include="UnitTest\test.h" />
     <ClInclude Include="UnitTest\typetraits_test.h" />
     <ClInclude Include="UnitTest\vector_test.h" />
@@ -162,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="Detail\alloc.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="UnitTest\list_test.cpp" />
     <ClCompile Include="UnitTest\typetraits_test.cpp" />
     <ClCompile Include="UnitTest\vector_test.cpp" />
   </ItemGroup>
