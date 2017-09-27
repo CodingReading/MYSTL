@@ -1,35 +1,35 @@
 #ifndef  LIST_H_
-#define	 LIST_H_
+#define  LIST_H_
 
 #include "allocator.h"
 #include "construct.h"
-#include "iterator.h"		//放在第一行会出错
+#include "iterator.h"       //放在第一行会出错
 
 namespace mySTL {
     //list 节点
     template <class T>
     struct __list_node {
-        __list_node<T>*		prev;
-        __list_node<T>*		next;
-        T					data;
+        __list_node<T>*     prev;
+        __list_node<T>*     next;
+        T                   data;
     };
 
     //list 迭代器
     template <class T>
     class list_iterator {
     public:
-        typedef	list_iterator<T>	iterator;
-        typedef list_iterator<T>	self;
+        typedef list_iterator<T>    iterator;
+        typedef list_iterator<T>    self;
 
-        typedef	bidirectional_iterator_tag	iterator_tag;
-        typedef T							value;
-        typedef T*							pointer;
-        typedef	T&							reference;
-        typedef __list_node<T>*				link_type;
-        typedef size_t						size_type;
-        typedef ptrdiff_t					difference_type;
+        typedef bidirectional_iterator_tag  iterator_tag;
+        typedef T                           value;
+        typedef T*                          pointer;
+        typedef T&                          reference;
+        typedef __list_node<T>*             link_type;
+        typedef size_t                      size_type;
+        typedef ptrdiff_t                   difference_type;
 
-        link_type	node;	//指向list节点
+        link_type   node;   //指向list节点
 
         list_iterator(link_type x) : node(x) {}
         list_iterator() {}
@@ -78,30 +78,30 @@ namespace mySTL {
     template <class T, class Alloc = allocator<__list_node<T>>>
     class list {
     protected:
-        typedef	__list_node<T>		list_node;
+        typedef __list_node<T>      list_node;
         //每次分配一个节点
-        typedef Alloc				list_node_allocator;
+        typedef Alloc               list_node_allocator;
 
     public:
-        typedef T					value_type;
-        typedef value_type*			pointer;
-        typedef const value_type*	const_pointer;
-        typedef value_type&			reference;
-        typedef const value_type&	const_reference;
-        typedef size_t				size_type;
-        typedef ptrdiff_t			difference_type;
+        typedef T                   value_type;
+        typedef value_type*         pointer;
+        typedef const value_type*   const_pointer;
+        typedef value_type&         reference;
+        typedef const value_type&   const_reference;
+        typedef size_t              size_type;
+        typedef ptrdiff_t           difference_type;
 
-        typedef list_node*			link_type;
-        typedef list_iterator<T>	iterator;
+        typedef list_node*          link_type;
+        typedef list_iterator<T>    iterator;
 
-    protected:			//node能隐示类型转换为 list_iterator<T>
-        link_type	node;	//指向空节点形成前闭后开区间，node为end()返回值
+    protected:          //node能隐示类型转换为 list_iterator<T>
+        link_type   node;   //指向空节点形成前闭后开区间，node为end()返回值
 
-    public:		//构造，析构函数
+    public:     //构造，析构函数
         list() { empty_initialize(); }
         ~list();
         list(const list<T, Alloc>& other);
-    public:			//成员函数
+    public:         //成员函数
         iterator begin() {
             return node->next;
         }
@@ -126,7 +126,7 @@ namespace mySTL {
         //采用归并排序算法
         void sort();
 
-    protected:		//配置，释放，构造，销毁节点
+    protected:      //配置，释放，构造，销毁节点
         link_type get_node() { return list_node_allocator::allocate(); }
 
         void deallocate_node(link_type p) {
