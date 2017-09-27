@@ -5,10 +5,9 @@ namespace mySTL {
 	template <class T, class Alloc>
 	list<T, Alloc>::list(const list<T, Alloc>& other) {
 		empty_initialize();
-		//bug , 追踪到析构函数中的clear死循环
-		for (link_type t = other.node->next; t != other.node; t = t->next);
-	
-			//std::cout << t->data << std::endl;
+		for (link_type t = other.node->next; t != other.node; t = t->next) {
+			push_back(t->data);
+		}
 	}
 
 	template <class T, class Alloc>
@@ -155,7 +154,8 @@ namespace mySTL {
 		list<T, Alloc> counter[64];
 		int depth = 0;		//层次
 		while (!empty()) {
-			temp.transfer(temp.begin(), begin(), begin() + 1);	//取出一个节点
+			iterator t = ++begin();
+			temp.transfer(temp.begin(), begin(), t);	//取出一个节点
 			int i = 0;
 			while (i < depth && !counter[i].empty()) {
 				//小于当前深度且counter[i]不为空
