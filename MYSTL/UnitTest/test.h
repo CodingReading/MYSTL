@@ -1,3 +1,6 @@
+#ifndef TEST_H_
+#define TEST_H_
+
 /*
  *   容器测试需要的函数
  */
@@ -29,3 +32,5 @@ namespace mySTL {
 		}
 	}
 }
+
+#endif
