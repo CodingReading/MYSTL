@@ -13,19 +13,19 @@ namespace mySTL {
     template <class T, class Alloc = allocator<T>>
     class vector {
     public:
-        typedef T				value_type;
-        typedef T*				iterator;
-        typedef T&				reference;
-        typedef iterator		pointer;
-        typedef size_t			size_type;
-        typedef ptrdiff_t		difference_type;
+        typedef T               value_type;
+        typedef T*              iterator;
+        typedef T&              reference;
+        typedef iterator        pointer;
+        typedef size_t          size_type;
+        typedef ptrdiff_t       difference_type;
 
     private:
-        iterator	start;
-        iterator	finish;
-        iterator	end_of_storage;
-        typedef		Alloc		data_allocator;
-    public:			//构造析构相关
+        iterator    start;
+        iterator    finish;
+        iterator    end_of_storage;
+        typedef     Alloc       data_allocator;
+    public:         //构造析构相关
         vector() :start(0), finish(0), end_of_storage(0) {}
         explicit vector(const size_type n);
         vector(const size_type n, const T& value);
@@ -40,23 +40,23 @@ namespace mySTL {
         ~vector();
         vector<T>& operator= (const vector<T>& v);
 
-    public:		//成员访问相关
+    public:     //成员访问相关
         reference operator[] (size_type index) { return *(start + index); }
         reference front() { return *start; }
         reference back() { return *(finish - 1); }
 
-    public:		//获取迭代器
+    public:     //获取迭代器
         iterator begin() { return start; }
         iterator end() { return finish; }
 
-    public:		//容量相关
+    public:     //容量相关
         bool empty() { return start == finish; }
         size_type size() const { return finish - start; }
         size_type capacity() const { return end_of_storage - start; }
         void reserve(size_type new_cap);
-        void shrink_to_fit();	//回收多余空间
+        void shrink_to_fit();   //回收多余空间
 
-    public:		//容器操作相关
+    public:     //容器操作相关
         void clear();
         iterator insert(iterator pos, size_type n, const T& val);
         iterator insert(iterator pos, const T& val);
@@ -67,7 +67,7 @@ namespace mySTL {
         void resize(size_type n);
         void swap(vector<T>& other);
 
-    public:		//字典序比较相关
+    public:     //字典序比较相关
         bool operator== (const vector<T, Alloc>& v);
         bool operator< (const vector<T, Alloc>& v);
         bool operator> (const vector<T, Alloc>& v);

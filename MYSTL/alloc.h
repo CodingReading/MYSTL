@@ -6,10 +6,10 @@
 namespace mySTL {
     class alloc {
     private:
-        enum { ALIGN = 8 };			//最小区块
-        enum { MAX_BYTES = 128 };	//最大区块
-        enum { NFREELISTS = MAX_BYTES / ALIGN };	//free_lists个数
-        enum { NJOBS = 20 };		//每次增加的节点数
+        enum { ALIGN = 8 };         //最小区块
+        enum { MAX_BYTES = 128 };   //最大区块
+        enum { NFREELISTS = MAX_BYTES / ALIGN };    //free_lists个数
+        enum { NJOBS = 20 };        //每次增加的节点数
 
     private:
         //将字节上调至8的倍数
@@ -39,13 +39,13 @@ namespace mySTL {
         //out of memory 处理函数   并未设置内存不足处理函数set_new_handle
 
     private:
-        static char *start_free;	//内存池起始位置
-        static char *end_free;		//内存池结束位置
+        static char *start_free;    //内存池起始位置
+        static char *end_free;      //内存池结束位置
         static size_t heap_size;
 
     public:
-        static void *allocate(size_t n);	//空间配置
-        static void deallocate(void *p, size_t n);	//空间释放
+        static void *allocate(size_t n);    //空间配置
+        static void deallocate(void *p, size_t n);  //空间释放
         static void *reallocate(void *p, size_t old_size, size_t new_size);
     };
 

@@ -8,7 +8,7 @@ namespace mySTL {
     template <class T1, class T2 >
     inline void construct(T1 *p, const T2& value) {
         //placement new 将初值设定到p所指空间
-        new (p) T1(value);	//调用T1::T1(value)
+        new (p) T1(value);  //调用T1::T1(value)
     }
 
     template <class T>

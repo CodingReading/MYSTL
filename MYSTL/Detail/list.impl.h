@@ -152,10 +152,10 @@ namespace mySTL {
             return;
         list<T, Alloc> temp;
         list<T, Alloc> counter[64];
-        int depth = 0;		//层次
+        int depth = 0;      //层次
         while (!empty()) {
             iterator t = ++begin();
-            temp.transfer(temp.begin(), begin(), t);	//取出一个节点
+            temp.transfer(temp.begin(), begin(), t);    //取出一个节点
             int i = 0;
             while (i < depth && !counter[i].empty()) {
                 //小于当前深度且counter[i]不为空

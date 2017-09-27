@@ -27,7 +27,7 @@ namespace mySTL {
             free_list[index] = list->next;
             return list;
         }
-        else {	//无可用空间
+        else {  //无可用空间
             return refill(ROUND_UP(n));
         }
     }
@@ -63,7 +63,7 @@ namespace mySTL {
             return chunk;
         }
 
-        void *result = chunk;	//此块空间返回给调用者
+        void *result = chunk;   //此块空间返回给调用者
         obj *cur_node = (obj *)(chunk + n);
         obj *next_node = nullptr;
 

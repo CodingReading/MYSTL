@@ -16,7 +16,7 @@
     This means the type is compatible with the types used in the C programming language,
     can be manipulated using C library functions: it can be created with std::malloc, 
     it can be copied with std::memmove, etc, and can be exchanged with C libraries directly, 
-    in its binary form.			
+    in its binary form.         
 
     Requirements
         Either:
@@ -193,11 +193,11 @@ namespace mySTL {
     template<class T>
     struct __type_traits<const T*>
     {
-        typedef __true_type		has_trivial_default_constructor;
-        typedef __true_type		has_trivial_copy_constructor;
-        typedef __true_type		has_trivial_assignment_operator;
-        typedef __true_type		has_trivial_destructor;
-        typedef __true_type		is_POD_type;
+        typedef __true_type     has_trivial_default_constructor;
+        typedef __true_type     has_trivial_copy_constructor;
+        typedef __true_type     has_trivial_assignment_operator;
+        typedef __true_type     has_trivial_destructor;
+        typedef __true_type     is_POD_type;
     };
 }
 
