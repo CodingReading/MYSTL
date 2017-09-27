@@ -114,7 +114,7 @@ namespace mySTL {
 		ForwardIterator last, const T& x, __false_type) {
 		for (; first != last; ++first)
 			construct(&(*first), x);
-	}
+    }
 }
 
 

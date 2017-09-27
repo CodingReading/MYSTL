@@ -5,10 +5,10 @@
 
 
 namespace mySTL {
-	namespace typetraits_test {
-		void test_case1();
-		void test_all();
-	}
+    namespace typetraits_test {
+        void test_case1();
+        void test_all();
+    }
 }
 
 
