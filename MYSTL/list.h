@@ -3,7 +3,7 @@
 
 #include "allocator.h"
 #include "construct.h"
-#include "iterator.h"       //放在第一行会出错
+#include "iterator.h"      
 
 namespace mySTL {
     //list 节点
