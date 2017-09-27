@@ -5,13 +5,13 @@ namespace mySTL {
 		//≤‚ ‘ππ‘ÏŒˆππ
 		void test_case1() {
 			myVec<int> v1(10);
-			myVec<int> v2(10, 8);
+			myVec<int> v2(1000000, 8);
 			myVec<int> v3(v2);
 			myVec<int> v4(v3.begin(), v3.end());
 			myVec<int> v5 = v4;
 
 			assert(v1.size() == 10);
-			assert(v4.size() == 10);
+			assert(v4.size() == 1000000);
 			v1.~vector();
 			assert(v1.empty());
 			mySTL::test::container_equal(v4, v5);
