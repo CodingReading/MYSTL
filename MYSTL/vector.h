@@ -1,11 +1,13 @@
 #ifndef VECTOR_H_
 #define VECTOR_H_
 
-#include "allocator.h"
 #include "construct.h"
-#include "iterator.h"
 #include "uninitialized.h"
 #include "algorithm.h"
+#include "allocator.h"
+#include "iterator.h"
+
+
 
 namespace mySTL {
 	template <class T, class Alloc = allocator<T>>
