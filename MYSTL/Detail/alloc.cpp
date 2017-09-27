@@ -70,7 +70,9 @@ namespace mySTL {
 		size_t index = FREELIST_INDEX(n);
 		free_list[index] = cur_node;
 		//将free_list各个节点串起来
-		for (int i = 1; i < nobjs; i++) {
+		//bug fix  for (int i = 1; i < nobjs; i++)
+		//原来这样多连接了一个空间，两天时间定位到bug
+		for (int i = 2; i < nobjs; i++) {
 			next_node = (obj *)((char *)cur_node + n);
 			cur_node->next = next_node;
 			cur_node = next_node;
@@ -86,13 +88,13 @@ namespace mySTL {
 		size_t total_bytes = size * nobjs;
 		size_t bytes_left = end_free - start_free;
 
-		if (bytes_left > total_bytes) {
+		if (bytes_left >= total_bytes) {
 			//内存池剩余空间满足需求
 			result = start_free;
 			start_free += total_bytes;
 			return result;
 		}
-		else if (bytes_left > size) {
+		else if (bytes_left >= size) {
 			//内存池剩余空间不能满足需求量，但够一个以上区块
 			nobjs = bytes_left / size;
 			total_bytes = size * nobjs;
@@ -136,7 +138,7 @@ namespace mySTL {
 
 			heap_size += bytes_to_get;
 			end_free = start_free + bytes_to_get;
-			//递归调用自己，修正 nobjs
+			//递归调用自己，修正 nobjs,调整start_free
 			return chunk_alloc(size, nobjs);
 		}
 	}
