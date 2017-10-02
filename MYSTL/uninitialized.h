@@ -38,16 +38,6 @@ namespace mySTL {
         return __uninitialized_copy_aux(first, last, result, is_POD());
     }
 
-    /*
-    template <class InputIterator, class ForwardIterator, class T>
-    inline ForwardIterator __uninitialized_copy(InputIterator first,
-    InputIterator last, ForwardIterator result, T*) {
-    typedef typename _type_traits<T>::is_POD_type is_POD;
-    return __uninitialized_copy_aux(first, last, result, is_POD());
-    }*/
-
-
-
     //针对char * ,wchar_t* 特化，直接使用memmove
     inline char *uninitialized_copy(const char *first, const char *last,
         char * result) {
@@ -61,23 +51,18 @@ namespace mySTL {
         return result + (last - first);
     }
 
+
     template <class ForwardIterator, class Size, class T>
     inline ForwardIterator uninitialized_fill_n(ForwardIterator first,
         Size n, const T& x) {
-        return __uninitialized_fill_n(first, n, x, value_type(first));
-    }
-
-    template <class ForwardIterator, class Size, class T>
-    inline ForwardIterator __uninitialized_fill_n(ForwardIterator first,
-        Size n, const T&x, T*) {
-        typedef typename __type_traits<T>::is_POD_type is_POD;
+        typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::is_POD_type is_POD;
         return __uninitialized_fill_n_aux(first, n, x, is_POD());
     }
 
     template <class ForwardIterator, class Size, class T>
     inline ForwardIterator __uninitialized_fill_n_aux(ForwardIterator first,
         Size n, const T& x, __true_type) {
-        fill_n(first, n, x);
+        std::fill_n(first, n, x);
         return first + n;
     }
 
@@ -93,20 +78,14 @@ namespace mySTL {
     template <class ForwardIterator, class T>
     inline void uninitialized_fill(ForwardIterator first,
         ForwardIterator last, const T& x) {
-        __uninitialized_fill(first, last, x, value_type(x));
-    }
-
-    template <class ForwardIterator, class T>
-    inline void __uninitialized_fill(ForwardIterator first,
-        ForwardIterator last, const T& x, T*) {
-        typedef typename __type_traits<T>::is_POD_type is_POD;
+        typedef typename __type_traits<iterator_traits<ForwardIterator>::value_type>::is_POD_type is_POD;
         __uninitialized_fill_aux(first, last, x, is_POD());
     }
 
     template <class ForwardIterator, class T>
     inline void __uninitialized_fill_aux(ForwardIterator first,
         ForwardIterator last, const T& x, __true_type) {
-        fill(first, last, x);
+        std::fill(first, last, x);
     }
 
     template <class ForwardIterator, class T>
