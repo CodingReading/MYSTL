@@ -66,6 +66,15 @@
     <ClInclude Include="UnitTest\list_test.h">
       <Filter>UnitTest</Filter>
     </ClInclude>
+    <ClInclude Include="deque.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Detail\deque.impl.h">
+      <Filter>Detail</Filter>
+    </ClInclude>
+    <ClInclude Include="UnitTest\deque_test.h">
+      <Filter>UnitTest</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Detail\alloc.cpp">
@@ -81,6 +90,9 @@
       <Filter>UnitTest</Filter>
     </ClCompile>
     <ClCompile Include="UnitTest\list_test.cpp">
+      <Filter>UnitTest</Filter>
+    </ClCompile>
+    <ClCompile Include="UnitTest\deque_test.cpp">
       <Filter>UnitTest</Filter>
     </ClCompile>
   </ItemGroup>
