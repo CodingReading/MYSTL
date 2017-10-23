@@ -3,6 +3,7 @@
 
 #include "../deque.h"
 #include "test.h"
+#include <cassert>
 
 namespace mySTL {
     namespace deque_test {
