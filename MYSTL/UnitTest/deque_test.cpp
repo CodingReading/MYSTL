@@ -3,7 +3,7 @@
 namespace mySTL {
     namespace deque_test {
         void test_case1() {
-            myDeque<int> deq1(200, 8);
+            myDeque<int> deq1(2000, 8);
             myDeque<int> deq2(deq1);
             mySTL::test::container_equal(deq1, deq2);
             myDeque<int> deq3(deq2.begin(), deq2.end());
@@ -11,13 +11,13 @@ namespace mySTL {
             myDeque<int> deq4 = deq3;
             mySTL::test::container_equal(deq1, deq4);
             
-            myDeque<int> deq5(100, 8);
+            myDeque<int> deq5(1000, 8);
             deq5 = deq1;
             mySTL::test::container_equal(deq3, deq5);
         }
         
         void test_case2() {
-            myDeque<int> deq1(200, 8);
+            myDeque<int> deq1(2000, 8);
             for (int i = 0; i < 10; ++i)
                 deq1.push_back(i);
             for (int i = 0; i < 10; ++i)
@@ -26,7 +26,7 @@ namespace mySTL {
                 deq1.pop_back();
             for (int i = 0; i < 10; ++i)
                 deq1.pop_front();
-            assert(deq1.size() == 200);
+            assert(deq1.size() == 2000);
         }
 
         void test_case3() {
@@ -54,6 +54,8 @@ namespace mySTL {
             deq2.swap(deq1);
             assert(deq1.size() == 50);
             assert(deq2.size() == 80);
+            deq2.clear();
+            assert(deq2.empty());
         }
 
         void test_all() {
