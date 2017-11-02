@@ -120,7 +120,7 @@ namespace mySTL {
         if (start.cur == pos.cur) {
             difference_type left = start.cur - start.first;
             if (left < n)
-                new_elements_at_front(n - left);
+                reserve_elems_at_front(n);
             start -= n;
             std::fill_n(start, n, val);
             //uninitialized_fill_n(start, n, val);
@@ -128,12 +128,12 @@ namespace mySTL {
         else if (finish.cur == pos.cur) {  //如果在尾部
             size_type left = finish.last - finish.cur;
             if (left < n)
-                new_elements_at_back(n - left);
-            //uninitialized_fill_n(finish, n, val);
+                reserve_elems_at_back(n);
+            std::fill_n(finish, n, val);
             finish += n;
         }
-        else 1; //中间 
-            //insert_aux(pos, n, val);
+        else 
+            insert_aux(pos, n, val);
         return start + elems_before;
     }
 
@@ -324,11 +324,11 @@ namespace mySTL {
 
     template <class T, class Alloc>
     void deque<T, Alloc>::reallocate_map(size_type nodes_to_add, bool add_at_front) {
-        size_type old_num_nodes = finish.node - map + 1;
+        size_type old_num_nodes = finish.node - start.node + 1;
         size_type new_num_nodes = old_num_nodes + nodes_to_add;
 
         map_pointer new_start;
-        if (map_size > (new_num_nodes >> 1)) {
+        if (map_size > (new_num_nodes << 1)) {
             //map_size比需要的两倍都大， 不需再分配map
             //让使用的节点位于map区段中央
             new_start = map + ((map_size - new_num_nodes) >> 1) +
@@ -387,7 +387,7 @@ namespace mySTL {
         if (pos.cur == start.cur) {
             size_type left = start.cur - start.first;
             if (n > left)
-                reserve_elems_at_front(n - left);
+                reserve_elems_at_front(n);
             start -= n;
             std::copy(first, last, start);
         }   
@@ -395,7 +395,7 @@ namespace mySTL {
             //向尾插入
             size_type left = finish.last - pos.cur;
             if (n > left)
-                reserve_elems_at_back(n - left);
+                reserve_elems_at_back(n);
             finish += n;
             std::copy_backward(first, last, finish);
         }

@@ -135,9 +135,9 @@ namespace mySTL {
             return *(*this + n);
         }
 
-        bool operator== (const self& x) { return cur == x.cur; }
-        bool operator!= (const self& x) { return cur != x.cur; }
-        bool operator< (const self& x) {
+        bool operator== (const self& x) const { return cur == x.cur; }
+        bool operator!= (const self& x) const { return cur != x.cur; }
+        bool operator< (const self& x) const {
             return (node == x.node) ? (cur < x.cur) : (node < x.node);
         }
     };
@@ -174,7 +174,7 @@ namespace mySTL {
         
         deque(const deque& other);
         template <class InputIterator>
-        deque(InputIterator first, InputIterator last);
+        deque(InputIterator first, InputIterator last); 
         deque<T, Alloc>& operator= (deque<T, Alloc>& other);
         ~deque();
 
