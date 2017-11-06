@@ -69,7 +69,7 @@ namespace mySTL {
     vector<T, Alloc>::insert(iterator pos, size_type n, const T& val) {
         difference_type dis = pos - start;
         if (n != 0) {
-            if (end_of_storage - finish >= n) {
+            if (size_type(end_of_storage - finish) >= n) {
                 //±¸ÓÃ¿Õ¼ä³ä×ã
                 const size_type elems_after = finish - pos;
                 iterator old_finish = finish;

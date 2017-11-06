@@ -50,7 +50,7 @@ namespace mySTL {
         iterator end() { return finish; }
 
     public:     //ÈÝÁ¿Ïà¹Ø
-        bool empty() { return start == finish; }
+        bool empty() const { return start == finish; }
         size_type size() const { return finish - start; }
         size_type capacity() const { return end_of_storage - start; }
         void reserve(size_type new_cap);
