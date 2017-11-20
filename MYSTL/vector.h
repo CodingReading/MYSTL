@@ -31,7 +31,7 @@ namespace mySTL {
         vector(const size_type n, const T& value);
 
         vector(const vector<T, Alloc>& v);
-        //注释后能编译通过
+
         //此构造函数必须对InputIterator 判断是否是整数，否则会出错
         //真正的执行函数为vector_aux
         template <class InputIterator>
