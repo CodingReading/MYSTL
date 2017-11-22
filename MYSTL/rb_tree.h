@@ -4,6 +4,7 @@
 #include "allocator.h"
 #include "construct.h"
 #include "iterator.h"
+#include "pair.h"
 
 namespace mySTL {
     typedef bool rb_tree_color_type;
@@ -113,6 +114,129 @@ namespace mySTL {
 
     public:
         link_type        node;
+    };
+
+    template <class T>
+    inline bool operator== (const rb_tree_iterator<T>& x, const rb_tree_iterator<T>& y) {
+        return x.node == y.node;
+    }
+
+    template <class T>
+    inline bool operator!= (const rb_tree_iterator<T>& x, const rb_tree_iterator<T>& y) {
+        return x.node != y.node;
+    }
+
+    //红黑树
+    template <class Key, class Value, class KeyOfValue, class Compare,
+    class Alloc = allocator<rb_tree_node<Value>>>
+    class rb_tree {
+    protected:
+        typedef void*                       void_pointer;
+        typedef Alloc                       rb_tree_node_allocator;
+        typedef rb_tree_node<Value>         tree_node;
+        typedef rb_tree_color_type          color_type;
+
+    public:
+        typedef Key                         key_type;
+        typedef Value                       value_type;
+        typedef value_type*                 pointer;
+        typedef value_type&                 reference;
+        typedef tree_node*                  link_type;
+        typedef size_t                      size_type;
+        typedef ptrdiff_t                   difference_type;
+        typedef rb_tree_iterator<Value>     iterator;
+
+    protected:
+        link_type get_node() {
+            return rb_tree_node_allocator::allocate();
+        }
+
+        void delete_node(link_type p) {
+            rb_tree_node_allocator::deallocate(p);
+        }
+
+        link_type creat_node(const value_type& x) {
+            link_type temp = get_node();
+            construct(&temp->value, x);
+            return temp;
+        }
+
+        //复制节点值和颜色
+        link_type clone_node(link_type x) {
+            link_type temp = creat_node(x->value);
+            temp->color = x->color;
+            temp->left = nullptr;
+            temp->right = nullptr;
+            temp->parent = nullptr;
+            return temp;
+        }
+
+        void destroy_node(link_type x) {
+            destroy(&x->value);
+            delete_node(x);
+        }
+
+    protected:
+        size_type   node_count;
+        link_type   header;         //头指针
+        Compare     key_compare;
+
+        link_type& root() const { return header->parent; }
+        link_type& leftmost() const { return header->left };
+        link_type& rightmost() const { return header->right; }
+
+        //取节点成员
+        static link_type& left(link_type x) { return x->left; }
+        static link_type& right(link_type x) { return x->right; }
+        static link_type& parent(link_type x) { return x->parent; }
+        static reference value(link_type x) { return x->value; }
+        static color_type& color(link_type x) { return x->color; }
+        static const Key& key(link_type x) { return KeyOfValue()(value(x)); }
+
+        //极值
+        static link_type& minimum(link_type x) {
+            return rb_tree_node::minimum(x);
+        }
+
+        static link_type& maximum(link_type x) {
+            return rb_tree_node::maximum(x);
+        }
+
+    public:     //构造析构
+        rb_tree(const Compare& comp = Compare())
+            : node_count(0), key_compare(comp) {
+            init();
+        }
+        //拷贝赋值
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& operator= (const rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& x);
+
+        ~rb_tree() {
+            clear();
+            delete_node(header);
+        }
+
+    private:
+        iterator __insert(link_type x, link_type y, const value_type& x);
+        link_type __copy(link_type x, link_type p);
+        iterator __erase(link_type x);
+        void init() {
+            header = get_node();
+            color(header) = rb_tree_red;    //header为红
+            root() = nullptr;
+            leftmost() = header;            //左右节点指向自己
+            rightmost() = header;
+        }
+
+    public:
+        Compare key_comp() const { return key_comp; }
+        iterator begin() { return leftmost(); }
+        iterator end() { return header; }
+        bool empty() const { return node_count == 0; }
+        size_type size() const { return node_count; }
+
+    public:
+        pair<iterator, bool> insert_unique(const value_type& x);
+        iterator insert_equal(const value_type& x);
     };
 
 
