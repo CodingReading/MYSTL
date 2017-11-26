@@ -207,8 +207,21 @@ namespace mySTL {
             : node_count(0), key_compare(comp) {
             init();
         }
+        //拷贝构造
+        rb_tree(const rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& x)
+            : key_compare(x.key_compare), node_count(0) {
+            if (x.root() == nullptr)
+                init();
+            else {
+                color(header) = rb_tree_red;
+                root() = __copy(x.root(), header);
+                leftmost() = minimum(root());
+                rightmost() = maximum(root());
+            }
+            node_count = x.node_count;
+        }
         //拷贝赋值
-        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& operator= (const rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& x);
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& operator= (const rb_tree<Key, Value, KeyOfValue, Compare>& x);
 
         ~rb_tree() {
             clear();
@@ -218,7 +231,7 @@ namespace mySTL {
     private:
         iterator __insert(link_type x, link_type y, const value_type& x);
         link_type __copy(link_type x, link_type p);
-        iterator __erase(link_type x);
+        void __erase(link_type x);          //删除以x为根的树
         void init() {
             header = get_node();
             color(header) = rb_tree_red;    //header为红
@@ -233,14 +246,15 @@ namespace mySTL {
         iterator end() { return header; }
         bool empty() const { return node_count == 0; }
         size_type size() const { return node_count; }
+        void clear();
 
     public:
         pair<iterator, bool> insert_unique(const value_type& x);
         iterator insert_equal(const value_type& x);
     };
-
-
 }
+
+#include "Detail\rb_tree.impl.h"
 
 
 
