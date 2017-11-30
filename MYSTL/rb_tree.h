@@ -239,6 +239,14 @@ namespace mySTL {
             leftmost() = header;            //左右节点指向自己
             rightmost() = header;
         }
+        //左旋
+        inline void rb_tree_rotate_left(link_type x, link_type& root);
+        //右旋
+        inline void rb_tree_rotate_right(link_type x, link_type& root);
+        //插入，再平衡
+        inline void rb_tree_rebalance_for_insert(link_type x, link_type& root);
+        //删除，再平衡
+        link_type rb_tree_rebalance_for_erase(link_type x, );
 
     public:
         Compare key_comp() const { return key_comp; }
@@ -249,7 +257,9 @@ namespace mySTL {
         void clear();
 
     public:
+        //键值不可重复
         pair<iterator, bool> insert_unique(const value_type& x);
+        //键值可重复
         iterator insert_equal(const value_type& x);
     };
 }
