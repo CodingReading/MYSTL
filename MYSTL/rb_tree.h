@@ -240,13 +240,13 @@ namespace mySTL {
             rightmost() = header;
         }
         //左旋
-        inline void rb_tree_rotate_left(link_type x, link_type& root);
+        inline void rb_tree_rotate_left(link_type x);
         //右旋
-        inline void rb_tree_rotate_right(link_type x, link_type& root);
+        inline void rb_tree_rotate_right(link_type x);
         //插入，再平衡
-        inline void rb_tree_rebalance_for_insert(link_type x, link_type& root);
+        inline void rb_tree_rebalance_for_insert(link_type x);
         //删除，再平衡
-        link_type rb_tree_rebalance_for_erase(link_type x, );
+        link_type rb_tree_rebalance_for_erase(link_type x);
 
     public:
         Compare key_comp() const { return key_comp; }

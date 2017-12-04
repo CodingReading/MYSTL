@@ -99,7 +99,7 @@ namespace mySTL {
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_left(link_type x, link_type& root) {
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_left(link_type x) {
         //x为旋转支点，将x右节点左旋，y顶替x
         link_type y = x->right;
         x->right = y->left;
@@ -107,9 +107,10 @@ namespace mySTL {
         //设父节点
         if (y->left != nullptr)
             y->left->parent = x;
+        y->parent = x->parent;
 
-        if (x == nullptr)
-            root = y;
+        if (x == root())
+            root() = y;
         else if (x == x->parent->left)
             x->parent->left = y;
         else
@@ -121,16 +122,17 @@ namespace mySTL {
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_right(link_type x, link_type& root) {
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_right(link_type x) {
         //x为旋转支点，将x左节点右旋，y顶替x
         link_type y = x->left;
         x->left = y->right;
 
         if (y->right != nullptr)
             y->right->parent = x;
+        y->parent = x->parent;
 
-        if (x == root)
-            root = y;
+        if (x == root())
+            root() = y;
         else if (x == x->parent->left)
             x->parent->left = y;
         else
@@ -143,8 +145,8 @@ namespace mySTL {
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator 
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__insert(link_type x, link_type y, const value_type& x {
-        link_type z = creat_node(x);
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__insert(link_type x, link_type y, const value_type& v) {
+        link_type z = creat_node(v);
         
         if (y == header || x != nullptr || key_compare(KeyOfValue()(v), key(y))) {
             //左插
@@ -166,11 +168,78 @@ namespace mySTL {
         left(z) = nullptr;
         right(z) = nullptr;
 
-        rb_tree_rebalance_for_insert(z, header->parent);
+        rb_tree_rebalance_for_insert(z);
         ++node_count;
         return iterator(z);
     } 
 
+    /*
+        三种不平衡：  
+            1. 当前节点父节点为红，叔叔节点为红
+            2. 当前节点父节点为红，叔叔节点为黑，当前节点为父节点左子
+            3. 当前节点父节点为红，叔叔节点为黑，当前节点为父节点右子
+        对应解法：     (父节点为祖父节点左子树情况下， 右子树类似)
+            1. 父节点和叔叔节点涂黑，祖父节点涂红，祖父节点为新的当前节点
+            2. 父节点涂黑，祖父节点涂红，以祖父节点为支点右旋
+            3. 父节点为新的当前节点，以新的当前节点为支点左旋，此后必会导致出现情况二
+    */
+    
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rebalance_for_insert(link_type x) {
+        x->color = rb_tree_red;
+        while (x != root() && x->parent->color == rb_tree_red) {
+            //父节点为左子节点
+            if (x->parent == x->parent->parent->left) {
+                link_type uncle = x->parent->parent->right;
+                if (uncle != nullptr && uncle->color == rb_tree_red) {
+                    //case1
+                    x->parent->color = rb_tree_black;
+                    uncle->color = rb_tree_black;
+                    x->parent->parent->color = rb_tree_red;
+                    x = x->parent->parent;
+                }
+                else {
+                    //case3
+                    if (x == x->parent->right) {
+                        x = x->parent;
+                        rb_tree_rotate_left(x);
+                    }
+                    //case2
+                    x->parent->color = rb_tree_black;
+                    x->parent->parent->color = rb_tree_red;
+                    rb_tree_rotate_right(x->parent->parent);
+                }
+            }
+            else {  //父节点为右子
+                //case1
+                link_type uncle = x->parent->parent->left;
+                if (uncle != nullptr && uncle->color == rb_tree_red) {
+                    uncle->color = rb_tree_black;
+                    x->parent->color = rb_tree_black;
+                    x->parent->parent->color = rb_tree_red;
+                    x = x->parent->parent;
+                }
+                else {
+                    //case3
+                    if (x == x->parent->left) {
+                        x = x->parent;
+                        rb_tree_rotate_right(x);
+                    }
+                    //case2
+                    x->parent->color = rb_tree_black;
+                    x->parent->parent->color = rb_tree_red;
+                    rb_tree_rotate(x->parent->parent);
+                }
+            }
+        }
+        root()->color = rb_tree_black;
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::link_type
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rebalance_for_erase(link_type x) {
+
+    }
 }
 
 
