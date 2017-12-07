@@ -1,6 +1,7 @@
 #ifndef RB_TREE_H_
 #define RB_TREE_H_
 
+#include "algorithm.h"
 #include "allocator.h"
 #include "construct.h"
 #include "iterator.h"
@@ -131,7 +132,6 @@ namespace mySTL {
     class Alloc = allocator<rb_tree_node<Value>>>
     class rb_tree {
     protected:
-        typedef void*                       void_pointer;
         typedef Alloc                       rb_tree_node_allocator;
         typedef rb_tree_node<Value>         tree_node;
         typedef rb_tree_color_type          color_type;
@@ -228,6 +228,22 @@ namespace mySTL {
             delete_node(header);
         }
 
+    public:             //操作相关
+        //键值不可重复
+        pair<iterator, bool> insert_unique(const value_type& x);
+        //键值可重复
+        iterator insert_equal(const value_type& x);
+        void erase(iterator pos);
+        void erase(iterator first, iterator last);
+        void erase(const Key& x);
+    public:                 //容量相关
+        Compare key_comp() const { return key_comp; }
+        iterator begin() { return leftmost(); }
+        iterator end() { return header; }
+        bool empty() const { return node_count == 0; }
+        size_type size() const { return node_count; }
+        void clear();
+
     private:
         iterator __insert(link_type x, link_type y, const value_type& x);
         link_type __copy(link_type x, link_type p);
@@ -244,28 +260,12 @@ namespace mySTL {
         //右旋
         inline void rb_tree_rotate_right(link_type x);
         //插入，再平衡
-        inline void rb_tree_rebalance_for_insert(link_type x);
+        void rb_tree_rebalance_for_insert(link_type x);
         //删除，再平衡
-        link_type rb_tree_rebalance_for_erase(link_type x);
-
-    public:
-        Compare key_comp() const { return key_comp; }
-        iterator begin() { return leftmost(); }
-        iterator end() { return header; }
-        bool empty() const { return node_count == 0; }
-        size_type size() const { return node_count; }
-        void clear();
-
-    public:
-        //键值不可重复
-        pair<iterator, bool> insert_unique(const value_type& x);
-        //键值可重复
-        iterator insert_equal(const value_type& x);
+        void rb_tree_rebalance_for_erase(link_type x);
     };
 }
 
 #include "Detail\rb_tree.impl.h"
-
-
 
 #endif

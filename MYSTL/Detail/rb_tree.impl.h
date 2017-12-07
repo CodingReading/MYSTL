@@ -24,46 +24,24 @@ namespace mySTL {
         return *this;
     }
 
+    //------------------------------操作函数-------------------------------
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::clear() {
         if (node_count != 0) {
             __erase(root());
             root() = nullptr;
             node_count = 0;
-            leftmost() = nullptr;
-            rightmost() = nullptr;
-        }
-    }
-
-    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::link_type 
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__copy(link_type x, link_type p) {
-        if (x == nullptr)
-            return nullptr;
-        link_type root = clone_node(x);
-        root->parent = p;
-        root->right = __copy(x->right, x);
-        root->left = __copy(x->left, x);
-        return root;
-    }
-
-    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__erase(link_type x) {
-        if (x != nullptr) {
-            destroy_node(x);
-            if (x->right != nullptr)
-                __erase(x->right);
-            if (x->left != nullptr)
-                __erase(x->left);
+            leftmost() = header;
+            rightmost() = header;
         }
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_equal(const value_type& v) {
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_equal(const value_type& v) {
         link_type p = header;
         link_type x = root();
-        
+
         while (x != nullptr) {
             p = x;
             x = key_compare(KeyOfValue()(v), key(x)) ? left(x) : right(x);
@@ -73,7 +51,7 @@ namespace mySTL {
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     pair<typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator, bool>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const value_type& v) {
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const value_type& v) {
         link_type p = header;
         link_type x = root();
         bool comp = true;
@@ -97,6 +75,113 @@ namespace mySTL {
         //Key重复
         return pair<iterator, bool>(j, false);
     }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::erase(iterator pos) {
+        link_type x = nullptr;
+        link_type y = pos.node;     
+        link_type z = y;            //要删除的节点
+
+        //若z左右子树都有，把z替换成左子树的最右节点(右子树最左节点一样)
+        if (y->left == nullptr)     //
+            x = y->right;
+        else if (y->right == nullptr)
+            x = y->left;
+        else {      //左右子树都有
+            y = y->left;
+            while (y->right != nullptr)
+                y = y->right;
+            x = y->left;
+        }
+        
+        if (y == z) {   //当待删除点pos最多只有一个子树时
+            if (x != nullptr)   //具有一颗子树
+                x->parent = z->parent;
+            if (root() == z)
+                root() = x;
+            else if (z == z->parent->left)
+                z->parent->left = x;
+            else
+                z->parent->right = x;
+
+            if (z == leftmost())
+                leftmost() = (x == nullptr ? z->parent : minimum(x));
+            if (z == rightmost())
+                rightmost() = (x == nullptr ? z->parent : maximum(x));
+        }
+        else {  //z有两个子树
+            //z的右子树接到y的右子树
+            z->right->parent = y;
+            y->right = z->right;
+            if (y != z->left) {
+                //y的左子树接到z左子树的右子树
+                z->left->right = y->left;
+                if (x != nullptr)
+                    x->parent = z->left;
+                //z左子树接到y的左子树
+                y->left = z->left;
+                y = z->left->parent;
+            }
+            
+            if (z == root())
+                root() = y;
+            else if (z == z->parent->left)
+                y = z->parent->left;
+            else
+                y = z->parent->right;
+
+            y->parent = z->parent;
+            mySTL::swap(y->color, z->color);
+            y = z;
+        }
+
+        /* 若顶替pos的节点是黑节点, 因为将它删除了，
+        所以包含x的路径少了一个黑节点，引发不平衡 */
+        if (y->color == rb_tree_black)
+            rb_tree_rebalance_for_erase(x);
+        destroy_node(y);
+        --node_count;
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::erase(iterator first, iterator last) {
+        if (first == begin() && last == end())
+            clear();
+        else {
+            while (first != last)
+                erase(first++);
+        }
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::erase(const Key& x) {
+        pair<iterator, iterator> p = equal_range(begin(), end(), x);
+        erase(p.first, p.second);
+    }
+    //------------------------------底层实现函数--------------------------
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::link_type 
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__copy(link_type x, link_type p) {
+        if (x == nullptr)
+            return nullptr;
+        link_type root = clone_node(x);
+        root->parent = p;
+        root->right = __copy(x->right, x);
+        root->left = __copy(x->left, x);
+        return root;
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__erase(link_type x) {
+        if (x != nullptr) {
+            destroy_node(x);
+            if (x->right != nullptr)
+                __erase(x->right);
+            if (x->left != nullptr)
+                __erase(x->left);
+        }
+    }
+
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rotate_left(link_type x) {
@@ -236,8 +321,7 @@ namespace mySTL {
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::link_type
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rebalance_for_erase(link_type x) {
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::rb_tree_rebalance_for_erase(link_type x) {
 
     }
 }
