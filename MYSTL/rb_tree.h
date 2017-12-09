@@ -262,7 +262,7 @@ namespace mySTL {
         //插入，再平衡
         void rb_tree_rebalance_for_insert(link_type x);
         //删除，再平衡
-        void rb_tree_rebalance_for_erase(link_type x);
+        void rb_tree_rebalance_for_erase(link_type x, link_type parent_of_x);
     };
 }
 
