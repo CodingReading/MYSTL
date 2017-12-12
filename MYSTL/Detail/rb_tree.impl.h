@@ -5,7 +5,8 @@ namespace mySTL {
     //---------------------------------拷贝构造--------------------------------
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& 
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::operator= (const rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& x) {
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::operator= (const rb_tree<Key,
+        Value, KeyOfValue, Compare, Alloc>& x) {
         if (this != &x) {
             clear();
             node_count = 0;
@@ -74,6 +75,14 @@ namespace mySTL {
             return pair<iterator, bool>(__insert(x, p, v), true);
         //Key重复
         return pair<iterator, bool>(j, false);
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    template <class InputIterator>
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(InputIterator first,
+        InputIterator last) {
+        while (first != last)
+            insert_unique(*first++);
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
@@ -163,6 +172,57 @@ namespace mySTL {
         pair<iterator, iterator> p = equal_range(begin(), end(), x);
         erase(p.first, p.second);
     }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::find(const key_type& x) {
+        link_type p = header;
+        link_type cur = root();
+        while (cur != nullptr) {
+            if (key_compare(key(cur), x))                
+                cur = cur->right;
+            else {
+                p = cur;
+                cur = cur->left;
+            }
+        }
+        
+        return (p == header || key_compare(x, key(p)) ? header : cur;
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::size_type
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::count(const key_type& x) {
+        pair<iterator, iterator> p = equal_range(begin(), end(), x);
+        iterator first = p.first;
+        iterator last = p.second;
+        size_type n = 0;
+        while (first != last) {
+            ++first;
+            ++n;
+        }
+        return n;
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::lower_bound(const key_type& x) {
+        return mySTL::lower_bound(begin(), end(), x);
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::upper_bound(const key_type& x) {
+        return mySTL::upper_bound(begin(), end(), x);
+    }
+
+    template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+    pair<rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator, 
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator>
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::equal_range(const key_type& x) {
+        return mySTL::equal_range(begin(), end(), x);
+    }
+
     //------------------------------底层实现函数--------------------------
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::link_type 
@@ -235,7 +295,8 @@ namespace mySTL {
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator 
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__insert(link_type x, link_type y, const value_type& v) {
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__insert(link_type x,
+        link_type y, const value_type& v) {
         link_type z = creat_node(v);
         
         if (y == header || x != nullptr || key_compare(KeyOfValue()(v), key(y))) {
