@@ -2,6 +2,7 @@
 #define ALGORITHM_H_
 
 #include "functional.h"
+#include "pair.h"
 namespace mySTL {
     template <class T>
     T max(const T& a, const T& b) {
@@ -116,8 +117,178 @@ namespace mySTL {
     template <class RandomAccessIterator, class Compare>
     inline void sort_heap(RandomAccessIterator first, RandomAccessIterator last, Compare comp) {
         while (last - first > 1) {
-            pop_heap(first, last--);
+            pop_heap(first, last--, comp);
         }
+    }
+
+
+    //--------------------lower_bound  upper_bound  equal_range-----------------------
+
+    //指向第一个不小于value的元素
+    template <class T, class ForwardIterator>
+    inline ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last,
+        const T& value) {
+        return __lower_bound(first, last, value, iterator_category(first));
+    }
+
+    template <class T, class ForwardIterator>
+    ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
+        const T& value, forward_iterator_tag) {
+        size_t len = 0;     //区间长度
+        ForwardIterator t = first;
+        while (t != last) {
+            ++len;
+            ++t;
+        }
+        ForwardIterator mid;
+        while (len > 0) {
+            size_t half = len >> 1;
+            mid = first;
+            for (size_t i = 0; i < half; ++i)
+                ++mid;
+            if (*mid < value) {
+                first = mid;
+                ++first;
+                len = len - half - 1;
+            }
+            else
+                len = half;
+        }
+        return first;
+    }
+
+    template <class T, class ForwardIterator>
+    ForwardIterator __lower_bound(ForwardIterator first, ForwardIterator last,
+        const T& value, random_access_iterator_tag) {
+        size_t len = last - first;     //区间长度
+        ForwardIterator mid;
+        while (len > 0) {
+            size_t half = len >> 1;
+            mid = first + half;
+            if (*mid < value) {
+                first = mid + 1;
+                len = len - half - 1;
+            }
+            else
+                len = half;
+        }
+        return first;
+    }
+
+    //指向第一个大于value的元素
+    template <class T, class ForwardIterator>
+    ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last,
+        const T& value) {
+        return __upper_bound(first, last, value, iterator_category(first));
+    }
+
+    template <class T, class ForwardIterator>
+    ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
+        const T& value, forward_iterator_tag) {
+        size_t len = 0;
+        ForwardIterator t = first;
+        while (t != last) {
+            ++t;
+            ++len;
+        }
+        ForwardIterator mid;
+        while (len > 0) {
+            size_t half = len >> 1;
+            mid = first;
+            for (size_t i = 0; i < half; ++i)
+                ++mid;
+            if (*mid > value)
+                len = half;
+            else {
+                first = mid;
+                ++first;
+                len = len - half - 1;
+            }
+        }
+        return first;
+    }
+
+    template <class T, class ForwardIterator>
+    ForwardIterator __upper_bound(ForwardIterator first, ForwardIterator last,
+        const T& value, random_access_iterator_tag) {
+        size_t len = last - first;
+        ForwardIterator mid;
+        while (len > 0) {
+            size_t half = len >> 1;
+            mid = first + half;
+            if (*mid > value)
+                len = half;
+            else {
+                first = mid + 1;
+                len = len - half - 1;
+            }
+        }
+        return first;
+    }
+
+    template <class T, class ForwardIterator>
+    pair<ForwardIterator, ForwardIterator>
+    equal_range(ForwardIterator first, ForwardIterator last, const T& value) {
+        return __equal_range(first, last, value, iterator_category(first));
+    }
+
+    template <class T, class ForwardIterator>
+    pair<ForwardIterator, ForwardIterator>
+    __equal_range(ForwardIterator first, ForwardIterator last,
+        const T& value, forward_iterator_tag) {
+        size_t len;
+        ForwardIterator t = first;
+        while (t != last) {
+            ++t;
+            ++len;
+        }
+        ForwardIterator mid;
+        while (len > 0) {
+            size_t half = len >> 1;
+            mid = first;
+            for (size_t i = 0; i < half; ++i)
+                ++mid;
+            if (*mid < value) {
+                first = mid;
+                ++first;
+                len = len - half - 1;
+            }
+            else if (*mid > value)
+                len = half;
+            else {
+                ForwardIterator left = lower_bound(first, mid, value);
+                for (size_t i = 0; i < len; ++i)
+                    ++first;
+                ForwardIterator right = upper_bound(++mid, first, value);
+                return pair<ForwardIterator, ForwardIterator>(left, right);
+            }
+        }
+        return pair<ForwardIterator, ForwardIterator>(first, first);
+    }
+
+    template <class T, class ForwardIterator>
+    pair<ForwardIterator, ForwardIterator>
+        __equal_range(ForwardIterator first, ForwardIterator last,
+            const T& value, random_access_iterator_tag) {
+        size_t len = last - first;
+        ForwardIterator mid;
+        while (len > 0) {
+            size_t half = len >> 1;
+            mid = first + half;
+            if (*mid < value) {
+                first = mid;
+                ++first;
+                len = len - half - 1;
+            }
+            else if (*mid > value)
+                len = half;
+            else {
+                ForwardIterator left = lower_bound(first, mid, value);
+                ForwardIterator right = upper_bound(++mid, first + len, value);
+                return pair<ForwardIterator, ForwardIterator>(left, right);
+            }
+        }
+        return pair<ForwardIterator, ForwardIterator>(first, first);
     }
 } 
 

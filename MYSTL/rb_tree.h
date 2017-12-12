@@ -42,6 +42,7 @@ namespace mySTL {
         typedef T                           value_type;
         typedef T&                          reference;
         typedef T*                          pointer;
+        typedef bidirectional_iterator_tag  iterator_category;
         typedef rb_tree_iterator<T>         self;
         typedef rb_tree_iterator<T>         iterator;
         typedef rb_tree_node<T>*            link_type;
@@ -128,13 +129,13 @@ namespace mySTL {
     }
 
     //红黑树
-    template <class Key, class Value, class KeyOfValue, class Compare,
-    class Alloc = allocator<rb_tree_node<Value>>>
+    template <class Key, class Value, class KeyOfValue,
+                class Compare, class Alloc = alloc>
     class rb_tree {
     protected:
-        typedef Alloc                       rb_tree_node_allocator;
-        typedef rb_tree_node<Value>         tree_node;
-        typedef rb_tree_color_type          color_type;
+        typedef allocator<rb_tree_node, Alloc>  rb_tree_node_allocator;
+        typedef rb_tree_node<Value>             tree_node;
+        typedef rb_tree_color_type              color_type;
 
     public:
         typedef Key                         key_type;
@@ -231,11 +232,19 @@ namespace mySTL {
     public:             //操作相关
         //键值不可重复
         pair<iterator, bool> insert_unique(const value_type& x);
+        template <class InputIterator>
+        void insert_unique(InputIterator first, InputIterator last);
         //键值可重复
-        iterator insert_equal(const value_type& x);
+        iterator (const value_type& x);
         void erase(iterator pos);
         void erase(iterator first, iterator last);
         void erase(const Key& x);
+        iterator find(const key_type& x);
+        size_type count(const key_type& x);
+        iterator lower_bound(const key_type& x);
+        iterator upper_bound(const key_type& x);
+        pair<iterator, iterator> equal_range(const key_type& x);
+
     public:                 //容量相关
         Compare key_comp() const { return key_comp; }
         iterator begin() { return leftmost(); }
