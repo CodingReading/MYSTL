@@ -10,7 +10,7 @@
 
 
 namespace mySTL {
-    template <class T, class Alloc = allocator<T>>
+    template <class T, class Alloc = alloc>
     class vector {
     public:
         typedef T               value_type;
@@ -24,7 +24,7 @@ namespace mySTL {
         iterator    start;
         iterator    finish;
         iterator    end_of_storage;
-        typedef     Alloc       data_allocator;
+        typedef     allocator<T, Alloc> data_allocator;
     public:         //构造析构相关
         vector() :start(0), finish(0), end_of_storage(0) {}
         explicit vector(const size_type n);

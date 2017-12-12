@@ -142,7 +142,7 @@ namespace mySTL {
         }
     };
 
-    template <class T, class Alloc = allocator<T>>
+    template <class T, class Alloc = alloc>
     class deque {
     public:
         typedef T                   value_type;
@@ -153,9 +153,9 @@ namespace mySTL {
         typedef deque_iterator<T>   iterator;
 
     protected:
-        typedef T**                 map_pointer;
-        typedef Alloc               data_allocator; //每次分配一个元素大小
-        typedef allocator<pointer>  map_allocator;//每次配置一个指针大小
+        typedef T**                         map_pointer;
+        typedef allocator<T, Alloc>         data_allocator; //每次分配一个元素大小
+        typedef allocator<pointer, Alloc>   map_allocator;//每次配置一个指针大小
 
     private:
         iterator start;         //表示第一个节点

@@ -75,12 +75,12 @@ namespace mySTL {
     };
     
     //list 的数据结构 环状双向链表
-    template <class T, class Alloc = allocator<__list_node<T>>>
+    template <class T, class Alloc = alloc>
     class list {
     protected:
-        typedef __list_node<T>      list_node;
+        typedef __list_node<T>              list_node;
         //每次分配一个节点
-        typedef Alloc               list_node_allocator;
+        typedef allocator<list_node, Alloc> list_node_allocator;
 
     public:
         typedef T                   value_type;
