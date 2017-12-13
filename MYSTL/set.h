@@ -1,7 +1,7 @@
 #ifndef SET_H_
 #define SET_H_
+
 #include "rb_tree.h"
-#include "functional.h"
 
 namespace mySTL {
     template <class Key, class Compare = less<Key>, class Alloc = alloc>
@@ -17,13 +17,12 @@ namespace mySTL {
         Container   t;      //红黑树实现set
 
     public:
-        typedef typename t::reference       reference;
-        typedef typename t::pointer         pointer;
-        typedef typename t::iterator        iterator;
-        typedef typename t::size_type       size_type;
-        typedef typename t::difference_type difference_type;
+        typedef typename Container::reference       reference;
+        typedef typename Container::iterator        iterator;
+        typedef typename Container::size_type       size_type;
+        typedef typename Container::difference_type difference_type;
         //构造函数
-        set():t(Compare){}
+        set():t(Compare()){}
         explicit set(const Compare& comp):t(comp){}
 
         template <class InputIterator>
@@ -84,7 +83,7 @@ namespace mySTL {
             return t.count(x);
         }
 
-        iterator lower_bound(const key_type& x) {
+      /*  iterator lower_bound(const key_type& x) {
             return t.lower_bound(x);
         }
 
@@ -94,7 +93,7 @@ namespace mySTL {
 
         pair<iterator, iterator> equal_range(const key_type& x) {
             return t.equal_range(x);
-        }
+        }*/
     };
 }
 

@@ -133,14 +133,13 @@ namespace mySTL {
                 class Compare, class Alloc = alloc>
     class rb_tree {
     protected:
-        typedef allocator<rb_tree_node, Alloc>  rb_tree_node_allocator;
         typedef rb_tree_node<Value>             tree_node;
+        typedef allocator<tree_node, Alloc>     rb_tree_node_allocator;
         typedef rb_tree_color_type              color_type;
 
     public:
         typedef Key                         key_type;
         typedef Value                       value_type;
-        typedef value_type*                 pointer;
         typedef value_type&                 reference;
         typedef tree_node*                  link_type;
         typedef size_t                      size_type;
@@ -183,7 +182,7 @@ namespace mySTL {
         Compare     key_compare;
 
         link_type& root() const { return header->parent; }
-        link_type& leftmost() const { return header->left };
+        link_type& leftmost() const { return header->left; }
         link_type& rightmost() const { return header->right; }
 
         //取节点成员
@@ -222,7 +221,8 @@ namespace mySTL {
             node_count = x.node_count;
         }
         //拷贝赋值
-        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& operator= (const rb_tree<Key, Value, KeyOfValue, Compare>& x);
+        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& operator= (
+            const rb_tree<Key, Value, KeyOfValue, Compare, Alloc>& x);
 
         ~rb_tree() {
             clear();
@@ -235,26 +235,26 @@ namespace mySTL {
         template <class InputIterator>
         void insert_unique(InputIterator first, InputIterator last);
         //键值可重复
-        iterator (const value_type& x);
+        iterator insert_equal(const value_type& x);
         void erase(iterator pos);
         void erase(iterator first, iterator last);
         void erase(const Key& x);
         iterator find(const key_type& x);
         size_type count(const key_type& x);
-        iterator lower_bound(const key_type& x);
-        iterator upper_bound(const key_type& x);
-        pair<iterator, iterator> equal_range(const key_type& x);
+        //iterator lower_bound(const key_type& x);
+        //iterator upper_bound(const key_type& x);
+        //pair<iterator, iterator> equal_range(const key_type& x);
 
     public:                 //容量相关
         Compare key_comp() const { return key_comp; }
-        iterator begin() { return leftmost(); }
-        iterator end() { return header; }
+        iterator begin() const { return leftmost(); }
+        iterator end() const { return header; }
         bool empty() const { return node_count == 0; }
         size_type size() const { return node_count; }
         void clear();
 
     private:
-        iterator __insert(link_type x, link_type y, const value_type& x);
+        iterator __insert(link_type x, link_type y, const value_type& v);
         link_type __copy(link_type x, link_type p);
         void __erase(link_type x);          //删除以x为根的树
         void init() {
