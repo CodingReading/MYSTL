@@ -1,6 +1,7 @@
 #ifndef HEAP_TEST_H_
 #define HEAP_TEST_H_
 
+#include "test.h"
 #include "../algorithm.h"
 #include "../vector.h"
 #include <cassert>
