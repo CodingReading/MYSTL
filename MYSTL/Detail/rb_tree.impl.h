@@ -27,7 +27,7 @@ namespace mySTL {
 
     //------------------------------操作函数-------------------------------
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::clear() {
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::clear() {
         if (node_count != 0) {
             __erase(root());
             root() = nullptr;
@@ -39,7 +39,7 @@ namespace mySTL {
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
-        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_equal(const value_type& v) {
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_equal(const value_type& v) {
         link_type p = header;
         link_type x = root();
 
@@ -52,7 +52,7 @@ namespace mySTL {
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
     pair<typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator, bool>
-        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const value_type& v) {
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(const value_type& v) {
         link_type p = header;
         link_type x = root();
         bool comp = true;
@@ -63,12 +63,13 @@ namespace mySTL {
         }
 
         iterator j(p);
-        if (comp)
-            if (p == begin()) { //如果插入点父节点为最左子节点
+        if (comp) {
+            if (j == begin()) { //如果插入点父节点为最左子节点
                 return pair<iterator, bool>(__insert(x, p, v), true);
             }
             else
                 --j;    //减小j，看是否有重复
+        }
 
         //新节点Key不重复
         if (key_compare(key(j.node), KeyOfValue()(v)))
@@ -82,7 +83,7 @@ namespace mySTL {
     void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::insert_unique(InputIterator first,
         InputIterator last) {
         while (first != last)
-            insert_unique(*first++);
+            insert_unique(*first++);    
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
@@ -140,9 +141,9 @@ namespace mySTL {
             if (z == root())
                 root() = y;
             else if (z == z->parent->left)
-                y = z->parent->left;
+                z->parent->left = y;
             else
-                y = z->parent->right;
+                z->parent->right = y;
 
             y->parent = z->parent;
             mySTL::swap(y->color, z->color);
@@ -168,13 +169,13 @@ namespace mySTL {
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::erase(const Key& x) {
-        pair<iterator, iterator> p = equal_range(begin(), end(), x);
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::erase(const key_type& x) {
+        pair<iterator, iterator> p = equal_range(x);
         erase(p.first, p.second);
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
+    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
     rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::find(const key_type& x) {
         link_type p = header;
         link_type cur = root();
@@ -187,13 +188,13 @@ namespace mySTL {
             }
         }
         
-        return (p == header || key_compare(x, key(p)) ? header : cur;
+        return (p == header || key_compare(x, key(p))) ? header : p;
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::size_type
+    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::size_type
     rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::count(const key_type& x) {
-        pair<iterator, iterator> p = equal_range(begin(), end(), x);
+        pair<iterator, iterator> p = equal_range(x);
         iterator first = p.first;
         iterator last = p.second;
         size_type n = 0;
@@ -205,20 +206,20 @@ namespace mySTL {
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
+    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
     rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::lower_bound(const key_type& x) {
         return mySTL::lower_bound(begin(), end(), x);
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
-        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::upper_bound(const key_type& x) {
+    typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator
+    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::upper_bound(const key_type& x) {
         return mySTL::upper_bound(begin(), end(), x);
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    pair<rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator, 
-        rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator>
+    pair<typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator, 
+        typename rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::iterator>
     rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::equal_range(const key_type& x) {
         return mySTL::equal_range(begin(), end(), x);
     }
@@ -231,13 +232,13 @@ namespace mySTL {
             return nullptr;
         link_type root = clone_node(x);
         root->parent = p;
-        root->right = __copy(x->right, x);
-        root->left = __copy(x->left, x);
+        root->right = __copy(x->right, root);
+        root->left = __copy(x->left, root);
         return root;
     }
 
     template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
-    rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__erase(link_type x) {
+    void rb_tree<Key, Value, KeyOfValue, Compare, Alloc>::__erase(link_type x) {
         if (x != nullptr) {
             destroy_node(x);
             if (x->right != nullptr)
@@ -382,7 +383,7 @@ namespace mySTL {
                     //case3
                     x->parent->color = rb_tree_black;
                     x->parent->parent->color = rb_tree_red;
-                    rb_tree_rotate(x->parent->parent);
+                    rb_tree_rotate_left(x->parent->parent);
                 }
             }
         }
