@@ -1,11 +1,12 @@
 #ifndef RB_TREE_H_
 #define RB_TREE_H_
 
-#include "algorithm.h"
+#include "pair.h"
 #include "allocator.h"
 #include "construct.h"
+#include "algorithm.h"
 #include "iterator.h"
-#include "pair.h"
+#include "functional.h"
 
 namespace mySTL {
     typedef bool rb_tree_color_type;
@@ -24,13 +25,13 @@ namespace mySTL {
         link_type       right;
         T               value;
 
-        static link_type minimum(link_type* p) {
+        static link_type minimum(link_type p) {
             while (p->left != nullptr)
                 p = p->left;
             return p;
         }
 
-        static link_type maximum(link_type* p) {
+        static link_type maximum(link_type p) {
             while (p->right != nullptr)
                 p = p->right;
             return p;
@@ -39,9 +40,11 @@ namespace mySTL {
 
     template <class T>
     class rb_tree_iterator {
+    public:
         typedef T                           value_type;
         typedef T&                          reference;
         typedef T*                          pointer;
+        typedef ptrdiff_t                   difference_type;
         typedef bidirectional_iterator_tag  iterator_category;
         typedef rb_tree_iterator<T>         self;
         typedef rb_tree_iterator<T>         iterator;
@@ -70,8 +73,9 @@ namespace mySTL {
                     node = p;
                     p = p->parent;
                 }
+                //若寻找根节点下一个下一个节点且根节点无右子则为end
                 if (node->right != p)
-                    node = p;       //此时为end
+                    node = p;       
             }
             return *this;
         }
@@ -79,7 +83,7 @@ namespace mySTL {
         //后置++
         self operator++ (int) {
             self temp = *this;
-            ++temp;
+            ++*this;
             return temp;
         }
 
@@ -99,7 +103,7 @@ namespace mySTL {
                 //上溯，直到当前为右子节点
                 link_type p = node->parent;
                 while (p->left == node) {
-                    p = node;
+                    node = p;
                     p = p->parent;
                 }
                 node = p;
@@ -110,7 +114,7 @@ namespace mySTL {
         //后置--
         self operator-- (int) {
             self t = *this;
-            --t;
+            --*this;
             return t;
         }
 
@@ -194,12 +198,12 @@ namespace mySTL {
         static const Key& key(link_type x) { return KeyOfValue()(value(x)); }
 
         //极值
-        static link_type& minimum(link_type x) {
-            return rb_tree_node::minimum(x);
+        static link_type minimum(link_type x) {
+            return tree_node::minimum(x);
         }
 
-        static link_type& maximum(link_type x) {
-            return rb_tree_node::maximum(x);
+        static link_type maximum(link_type x) {
+            return tree_node::maximum(x);
         }
 
     public:     //构造析构
@@ -213,6 +217,7 @@ namespace mySTL {
             if (x.root() == nullptr)
                 init();
             else {
+                header = get_node();
                 color(header) = rb_tree_red;
                 root() = __copy(x.root(), header);
                 leftmost() = minimum(root());
@@ -238,12 +243,12 @@ namespace mySTL {
         iterator insert_equal(const value_type& x);
         void erase(iterator pos);
         void erase(iterator first, iterator last);
-        void erase(const Key& x);
+        void erase(const key_type& x);
         iterator find(const key_type& x);
         size_type count(const key_type& x);
-        //iterator lower_bound(const key_type& x);
-        //iterator upper_bound(const key_type& x);
-        //pair<iterator, iterator> equal_range(const key_type& x);
+        iterator lower_bound(const key_type& x);
+        iterator upper_bound(const key_type& x);
+        pair<iterator, iterator> equal_range(const key_type& x);
 
     public:                 //容量相关
         Compare key_comp() const { return key_comp; }

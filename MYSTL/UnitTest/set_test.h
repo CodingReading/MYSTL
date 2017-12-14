@@ -1,7 +1,9 @@
 #ifndef SET_TEST_H_
 #define SET_TEST_H_
+
 #include "../set.h"
 #include "test.h"
+#include <cassert>
 
 namespace mySTL {
     namespace set_test {

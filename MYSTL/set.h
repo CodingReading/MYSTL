@@ -59,14 +59,14 @@ namespace mySTL {
             t.insert_unique(first, last);
         }
 
+        void erase(const key_type& x) {
+            t.erase(x);
+        }
+
         void erase(iterator pos) {
             t.erase(pos);
         }
         
-        void earse(const key_type& x) {
-            t.erase(x);
-        }
-
         void erase(iterator first, iterator last) {
             t.erase(first, last);
         }
@@ -83,7 +83,7 @@ namespace mySTL {
             return t.count(x);
         }
 
-      /*  iterator lower_bound(const key_type& x) {
+        iterator lower_bound(const key_type& x) {
             return t.lower_bound(x);
         }
 
@@ -93,7 +93,7 @@ namespace mySTL {
 
         pair<iterator, iterator> equal_range(const key_type& x) {
             return t.equal_range(x);
-        }*/
+        }
     };
 }
 
