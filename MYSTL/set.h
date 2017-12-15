@@ -19,6 +19,7 @@ namespace mySTL {
     public:
         typedef typename Container::reference       reference;
         typedef typename Container::iterator        iterator;
+        typedef typename Container::const_iterator  const_iterator;
         typedef typename Container::size_type       size_type;
         typedef typename Container::difference_type difference_type;
         //构造函数
@@ -51,7 +52,8 @@ namespace mySTL {
 
     public:     //操作相关
         pair<iterator, bool> insert(const value_type& x) {
-            return t.insert_unique(x);
+            pair<iterator, bool> p = t.insert_unique(x);
+            return pair<iterator, bool>(p.first, p.second);
         }
 
         template <class InputIterator>

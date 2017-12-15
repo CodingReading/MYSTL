@@ -43,6 +43,7 @@ namespace mySTL {
     public:
         typedef T                           value_type;
         typedef T&                          reference;
+        typedef const T&                    const_reference;
         typedef T*                          pointer;
         typedef ptrdiff_t                   difference_type;
         typedef bidirectional_iterator_tag  iterator_category;
@@ -55,8 +56,7 @@ namespace mySTL {
         rb_tree_iterator(const iterator& it) { node = it.node; }
 
     public:     //∑√Œ 
-        reference operator* () const { return node->value; }
-        pointer operator-> () const { return &(operator*()); }
+        const_reference operator* () const { return node->value; }
 
         //«∞÷√++
         self& operator++() {
@@ -142,13 +142,14 @@ namespace mySTL {
         typedef rb_tree_color_type              color_type;
 
     public:
-        typedef Key                         key_type;
-        typedef Value                       value_type;
-        typedef value_type&                 reference;
-        typedef tree_node*                  link_type;
-        typedef size_t                      size_type;
-        typedef ptrdiff_t                   difference_type;
-        typedef rb_tree_iterator<Value>     iterator;
+        typedef Key                           key_type;
+        typedef Value                         value_type;
+        typedef value_type&                   reference;
+        typedef tree_node*                    link_type;
+        typedef size_t                        size_type;
+        typedef ptrdiff_t                     difference_type;
+        typedef rb_tree_iterator<Value>       iterator;
+        typedef rb_tree_iterator<const Value> const_iterator;
 
     protected:
         link_type get_node() {
