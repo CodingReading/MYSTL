@@ -22,8 +22,8 @@ namespace mySTL {
     };
 
     inline unsigned int mySTL_next_prime(unsigned int n) {
-        const unsigned int* pos = lower_bound(mySTL_primers_list, mySTL_primers_list +
-            mySTL_num_primers, n);
+        const unsigned int* pos = lower_bound(mySTL_primers_list, mySTL_primers_list
+            + mySTL_num_primers, n);
         return pos == (mySTL_primers_list + mySTL_num_primers) ?
             *(mySTL_primers_list + mySTL_num_primers - 1) : *pos;
     }
@@ -35,6 +35,7 @@ namespace mySTL {
         typedef HashFcn                 hasher;
         typedef EqualKey                key_equal;
         typedef size_t                  size_type;
+        typedef Value                   value_type;
         typedef hashtable_node<Value>   node;
         typedef allocator<node, Alloc>  node_allocator;
         typedef hashtable_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> iterator;
@@ -85,9 +86,32 @@ namespace mySTL {
         size_type num_buckets() const { return buckets.size(); }
 
     public:     //²Ù×÷Ïà¹Ø
+        pair<iterator, bool> insert_unique(const value_type& obj);
+        iterator insert_equal(const value_type& obj);
+        pair<iterator, bool> insert_unique_noresize(const value_type& obj);
+        iterator insert_equal_noresize(const value_type& obj);
 
     private:
+        node* get_node() {
+            return (node*)node_allocator::allocate();
+        }
 
+        void delete_node(node* p) {
+            node_allocator::deallocate(p);
+        }
+
+        node* create_node(const value_type& v) {
+            node* t = get_node();
+            construct(t, &v);
+            return t;
+        }
+
+        void destroy_node(node* p) {
+            destroy(&p->value);
+            delete_node(p);
+        }
+
+        void resize(size_type num_elements);
     };
 
     template <class Value, class Key, class HashFcn, class ExtractKey, 
@@ -138,3 +162,6 @@ namespace mySTL {
         }
     };
 }
+
+
+#include "Detail/hashtable.impl.h"
