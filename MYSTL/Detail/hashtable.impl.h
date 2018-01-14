@@ -48,6 +48,54 @@ namespace mySTL {
         }
     }
 
+    template <class Value, class Key, class HashFcn, class ExtractKey,
+    class EqualKey, class Alloc = alloc>
+    hashtable<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>::size_type
+    hashtable<Value, Key, HashFcn, ExtractKey, EqualKey,
+        Alloc>::erase(const key_type& x) {
+        size_type n = bkt_num(x);
+        size_type total = 0;
+        node** prev = &buckets[n];
+        node* cur = buckets[n];
+        while (cur != nullptr) {
+            if (equals(get_key(cur->value), x)) {
+                *prev = cur->next;
+                destroy_node(cur);
+                cur = *prev;
+                --num_elements;
+                ++total;
+            }
+            else {
+                prev = &(*cur).next;
+                cur = cur->next;
+            }
+        }
+        return total;
+    }
+
+    template <class Value, class Key, class HashFcn, class ExtractKey,
+    class EqualKey, class Alloc = alloc>
+    void hashtable<Value, Key, HashFcn, ExtractKey, EqualKey,
+        Alloc>::erase(const iterator& it) {
+        node* p = it.cur;
+        // 比 STL 优雅
+        if (p != nullptr) {
+            size_type n = bkt_num(p->value);
+            node* cur = buckets[n];
+            node** prev = &buckets[n];
+            while (cur != nullptr) {
+                if (cur == p) {
+                    --num_elements;
+                    *prev = cur->next;
+                    destroy_node(cur);
+                    break;
+                }
+                prev = &(*cur).next;
+                cur = cur->next;
+            }
+        }
+    }
+
     // 在不用重分配的前提下插入，键值不重复
     template <class Value, class Key, class HashFcn, class ExtractKey,
     class EqualKey, class Alloc = alloc>
@@ -85,6 +133,32 @@ namespace mySTL {
         buckets[n] = temp;
         ++num_elements;
         return iterator(temp, this);
+    }
+
+    template <class Value, class Key, class HashFcn, class ExtractKey,
+    class EqualKey, class Alloc = alloc>
+    hashtable<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>::iterator 
+    hashtable<Value, Key, HashFcn, ExtractKey, EqualKey,
+        Alloc>::find(const key_type& key) {
+        size_type n = bkt_num(key);
+        node* cur = buckets[n];
+        while (cur != nullptr && !equals(get_key(cur->value), key))
+            cur = cur->next;
+        return iterator(first, this);
+    }
+
+
+    template <class Value, class Key, class HashFcn, class ExtractKey,
+    class EqualKey, class Alloc = alloc>
+    hashtable<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc>::size_type
+    hashtable<Value, Key, HashFcn, ExtractKey, EqualKey,
+        Alloc>::count(const key_type& key) {
+        size_type n = bkt_num(key);
+        size_type ans = 0;
+        for (node* cur = buckets[n]; cur != nullptr; cur = cur->next)
+            if (equals(get_key(cur->value), key))
+                ++ans;
+        return ans;
     }
 }
 

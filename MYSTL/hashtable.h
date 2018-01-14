@@ -28,6 +28,11 @@ namespace mySTL {
             *(mySTL_primers_list + mySTL_num_primers - 1) : *pos;
     }
 
+    // 前置声明
+    template <class Value, class Key, class HashFcn, class ExtractKey,
+    class EqualKey, class Alloc = alloc>
+    struct hashtable_iterator;
+
     template <class Value, class Key, class HashFcn, class ExtractKey,
         class EqualKey, class Alloc = alloc>
     class hashtable {
@@ -36,6 +41,7 @@ namespace mySTL {
         typedef EqualKey                key_equal;
         typedef size_t                  size_type;
         typedef Value                   value_type;
+        typedef Key                     key_type;
         typedef hashtable_node<Value>   node;
         typedef allocator<node, Alloc>  node_allocator;
         typedef hashtable_iterator<Value, Key, HashFcn, ExtractKey, EqualKey, Alloc> iterator;
@@ -90,6 +96,10 @@ namespace mySTL {
         iterator insert_equal(const value_type& obj);
         pair<iterator, bool> insert_unique_noresize(const value_type& obj);
         iterator insert_equal_noresize(const value_type& obj);
+        size_type erase(const key_type& x);
+        void erase(const iterator& it);
+        iterator find(const key_type& key);
+        size_type count(const key_type& key);
 
     private:
         node* get_node() {
@@ -112,6 +122,10 @@ namespace mySTL {
         }
 
         void resize(size_type num_elements);
+    
+    private:
+        //根据key计算桶号
+        size_type bkt_num(const key_type& x);
     };
 
     template <class Value, class Key, class HashFcn, class ExtractKey, 
